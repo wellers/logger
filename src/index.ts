@@ -36,9 +36,7 @@ class Logger {
 
 		if (processName && typeof processName !== 'string') {
 			throw new Error('processName must be of type string.');
-		}
-
-		fs.promises.access(dir);		
+		}				
 		
 		this.dir = dir;
 		this.processName = processName;
@@ -65,7 +63,7 @@ class Logger {
 
 		const { processName, category, message, error } = options;
 
-		const filePath = this.getFilePath(logType, processName);
+		const filePath = await this.getFilePath(logType, processName);
 
 		let logMessage = message;
 
@@ -82,7 +80,9 @@ class Logger {
 		await fs.promises.appendFile(filePath, `${date}: ${logMessage}\n`);
 	}
 
-	private getFilePath(logType: string, processName?: string) {
+	private async getFilePath(logType: string, processName?: string) {
+		await fs.promises.access(this.dir);
+
 		const date = format('yyyy-MM-dd', new Date());
 
 		let filename = `${logType}-${date}.txt`;
