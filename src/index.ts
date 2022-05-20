@@ -26,18 +26,26 @@ interface LogOptions {
 }
 
 class Logger {
-	private processName: string;
 	private dir: string;
+	private processName?: string;	
 
-	constructor(processName: string, dir: string) {
-		fs.promises.access(dir);
+	constructor(dir: string, processName?: string) {
+		if (typeof dir !== 'string') {
+			throw new Error('dir must be of type string.');
+		}
 
-		this.processName = processName;
+		if (processName && typeof processName !== 'string') {
+			throw new Error('processName must be of type string.');
+		}
+
+		fs.promises.access(dir);		
+		
 		this.dir = dir;
+		this.processName = processName;
 	}
 
 	error(options: LogOptions) {
-		this.logMessage(options, 'Error');
+		this.logMessage(options, 'ERROR');
 	}
 
 	info(options: LogOptions) {
@@ -49,6 +57,10 @@ class Logger {
 	}
 
 	private async logMessage(options: LogOptions, logType: string) {
+		if (typeof logType !== 'string') {
+			throw new Error('logType must be of type string.');
+		}
+
 		Logger.validateOptions(options);
 
 		const { processName, category, message, error } = options;
@@ -57,7 +69,7 @@ class Logger {
 
 		let logMessage = message;
 
-		if (typeof category !== 'undefined') {
+		if (category) {
 			logMessage = `${category} - ${logMessage}`;
 		}
 
