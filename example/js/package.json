@@ -1,9 +1,9 @@
 {
 	"name": "example-js-app",
 	"description": "An example app.",
-	"version": "1.0.0",	
-	"scripts": {		
+	"version": "1.0.0",
+	"scripts": {
 		"start": "node lib/index.js",
-		"link": "npm link ../.."		
-	}	
+		"link": "npm link ../.."
+	}
 }
