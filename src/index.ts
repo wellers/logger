@@ -42,16 +42,16 @@ class Logger {
 		this.processName = processName;
 	}
 
-	error(options: LogOptions) {
-		this.logMessage(options, 'ERROR');
+	async error(options: LogOptions) {
+		await this.logMessage(options, 'ERROR');
 	}
 
-	info(options: LogOptions) {
-		this.logMessage(options, 'INFO');
+	async info(options: LogOptions) {
+		await this.logMessage(options, 'INFO');
 	}
 
-	warning(options: LogOptions) {
-		this.logMessage(options, 'WARN');
+	async warning(options: LogOptions) {
+		await this.logMessage(options, 'WARN');
 	}
 
 	private async logMessage(options: LogOptions, logType: string) {
