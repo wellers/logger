@@ -25,21 +25,41 @@ interface LogOptions {
 	error?: Error,
 }
 
+interface LoggerOptions {
+	dir: string,
+	processName?: string,
+	maxLogFileSizeInBytes?: number
+}
+
+const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
+
 class Logger {
 	private dir: string;
-	private processName?: string;	
+	private processName?: string;
+	private maxLogFileSizeInBytes?: number
 
-	constructor(dir: string, processName?: string) {
+	constructor({ dir, processName, maxLogFileSizeInBytes }: LoggerOptions) {
 		if (typeof dir !== 'string') {
 			throw new Error('dir must be of type string.');
 		}
 
 		if (processName && typeof processName !== 'string') {
 			throw new Error('processName must be of type string.');
-		}				
-		
+		}
+
+		if (maxLogFileSizeInBytes) {
+			if (isNaN(maxLogFileSizeInBytes)) {
+				throw new Error('maxLogfileSize must be of type number.');
+			}
+
+			if (maxLogFileSizeInBytes <= 0) {
+				throw new Error('maxLogfileSize must a positive integer.');
+			}
+		}
+
 		this.dir = dir;
 		this.processName = processName;
+		this.maxLogFileSizeInBytes = maxLogFileSizeInBytes;
 	}
 
 	async error(options: LogOptions) {
@@ -59,7 +79,7 @@ class Logger {
 			throw new Error('logType must be of type string.');
 		}
 
-		Logger.validateOptions(options);
+		this.validateOptions(options);
 
 		const { processName, category, message, error } = options;
 
@@ -85,7 +105,7 @@ class Logger {
 
 		const date = format('yyyy-MM-dd', new Date());
 
-		let filename = `${logType}-${date}.txt`;
+		let filename = `${logType}-${date}`;
 
 		processName = processName ?? this.processName;
 
@@ -94,11 +114,40 @@ class Logger {
 		}
 
 		filename = sanitize(filename);
+		let filePath = path.join(this.dir, `${filename}.txt`);
 
-		return path.join(this.dir, filename);
+		if (typeof this.maxLogFileSizeInBytes !== 'undefined') {
+			let fileSizeInBytes = 0;
+
+			try {
+				const { size } = await fs.promises.stat(filePath);
+
+				fileSizeInBytes = size;
+			} 
+			catch {
+				// if filePath doesn't exist, log file can be created from filePath
+				return filePath;
+			}
+
+			if (fileSizeInBytes >= this.maxLogFileSizeInBytes) {
+				const files = await fs.promises.readdir(this.dir)
+
+				const index = files.filter(file => file.startsWith(filename)).length;				
+				const paddedIndex = zeroPad(index, 2);
+
+				let newFilename = `${filename}.txt${paddedIndex}`;
+				newFilename = sanitize(newFilename);
+
+				const newPath = path.join(this.dir, newFilename);
+
+				await fs.promises.rename(filePath, newPath);
+			}
+		}
+
+		return filePath;
 	}
 
-	private static validateOptions(options: LogOptions) {
+	private validateOptions(options: LogOptions) {
 		const results = validate(options);
 
 		if (Array.isArray(results)) {
