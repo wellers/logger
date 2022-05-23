@@ -33,6 +33,7 @@ logger.info({ message: 'Job ended.' });
 
 * dir - `string` - Set the base directory where to write your log files.
 * processName - `string` - Optional name to prefix the log filenames with.
+* maxLogFileSizeInBytes - `number` - Optional maximum file size in bytes a log file can be. Once this value has been exceeded, a new log file will be created with the former file being retained and renamed.
 
 **`logger.error(options)`** - For logging caught errors.
 
