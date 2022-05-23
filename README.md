@@ -31,17 +31,17 @@ logger.info({ message: 'Job ended.' });
 
 **`new Logger(dir, processName)`** - Initialise the Logger.
 
-* dir - `string` - set the base directory where to store your log files.
-* processName - `string` - Optional name to prefix the created log filenames with.
+* dir - `string` - Set the base directory where to write your log files.
+* processName - `string` - Optional name to prefix the log filenames with.
 
-**`logger.error(options)`** - Record an error. For recording your caught errors using this.
+**`logger.error(options)`** - For logging caught errors.
 
-**`logger.info(options)`** - Record a information. Useful for recording process information.
+**`logger.info(options)`** - Useful for logging process information.
 
-**`logger.warning(options)`** - Record a warning. Useful for recording non-critical information.
+**`logger.warning(options)`** - Useful for recording non-critical exceptions.
 
 * options - `object` - Log options.
-    * processName - `string` - Optional name to prefix your log files names with.
+    * processName - `string` - Optional name to prefix the log filenames with.
     * category - `string` - Optional category to apply to your logged message.
     * message - `string` - Optional message to record in the log.
     * error - `Error` - Optional Error.
