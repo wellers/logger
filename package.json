@@ -1,6 +1,6 @@
 {
 	"name": "@wellers/logger",
-	"description": "Module to centralise logging.",
+	"description": "Use logger to centralise all of your projects logging.",
 	"version": "1.0.0",
 	"author": "Paul Welbourne",
 	"type": "module",
