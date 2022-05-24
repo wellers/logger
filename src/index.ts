@@ -26,9 +26,9 @@ interface LogOptions {
 }
 /**
  * Logger options.
- * @param dir Set the base directory where to write your log files.
- * @param [processName] Optional name to prefix the log filenames with.
- * @param [maxLogFileSizeInBytes] Optional maximum file size in bytes a log file can be. Once this value has been exceeded, a new log file will be created with the former file being retained and renamed.
+ * @param {string} dir Set the base directory where to write your log files.
+ * @param {string} [processName] Optional name to prefix the log filenames with.
+ * @param {number} [maxLogFileSizeInBytes] Optional maximum file size in bytes a log file can be. Once this value has been exceeded, a new log file will be created with the former file being retained and renamed.
  */
 interface LoggerOptions {
 	dir: string,
@@ -46,7 +46,7 @@ class Logger {
 
 	/**
 	 * Create a Logger.
-	 * @param options Logger options.	 
+	 * @param {object} options Logger options.	 
 	 */
 	constructor({ dir, processName, maxLogFileSizeInBytes }: LoggerOptions) {
 		if (typeof dir !== 'string') {
@@ -74,15 +74,15 @@ class Logger {
 
 	/**
 	 * For logging caught errors.
-	 * @param options Log options.
+	 * @param {object} options Log options.
 	 */
 	async error(options: LogOptions) {
 		await this.logMessage(options, 'ERROR');
 	}
-	
+
 	/**
 	 * Useful for logging process information.
-	 * @param options Log options.
+	 * @param {object} options Log options.
 	 */
 	async info(options: LogOptions) {
 		await this.logMessage(options, 'INFO');
@@ -90,7 +90,7 @@ class Logger {
 
 	/**
 	 * Useful for recording non-critical exceptions.
-	 * @param options Log options.
+	 * @param {object} options Log options.
 	 */
 	async warning(options: LogOptions) {
 		await this.logMessage(options, 'WARN');
