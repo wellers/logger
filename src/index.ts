@@ -24,7 +24,12 @@ interface LogOptions {
 	message?: string,
 	error?: Error,
 }
-
+/**
+ * Logger options.
+ * @param dir Set the base directory where to write your log files.
+ * @param [processName] Optional name to prefix the log filenames with.
+ * @param [maxLogFileSizeInBytes] Optional maximum file size in bytes a log file can be. Once this value has been exceeded, a new log file will be created with the former file being retained and renamed.
+ */
 interface LoggerOptions {
 	dir: string,
 	processName?: string,
@@ -33,11 +38,16 @@ interface LoggerOptions {
 
 const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
 
+/** Class representing a Logger. */
 class Logger {
 	private dir: string;
 	private processName?: string;
 	private maxLogFileSizeInBytes?: number
 
+	/**
+	 * Create a Logger.
+	 * @param options Logger options.	 
+	 */
 	constructor({ dir, processName, maxLogFileSizeInBytes }: LoggerOptions) {
 		if (typeof dir !== 'string') {
 			throw new Error('dir must be of type string.');
@@ -62,14 +72,26 @@ class Logger {
 		this.maxLogFileSizeInBytes = maxLogFileSizeInBytes;
 	}
 
+	/**
+	 * For logging caught errors.
+	 * @param options Log options.
+	 */
 	async error(options: LogOptions) {
 		await this.logMessage(options, 'ERROR');
 	}
-
+	
+	/**
+	 * Useful for logging process information.
+	 * @param options Log options.
+	 */
 	async info(options: LogOptions) {
 		await this.logMessage(options, 'INFO');
 	}
 
+	/**
+	 * Useful for recording non-critical exceptions.
+	 * @param options Log options.
+	 */
 	async warning(options: LogOptions) {
 		await this.logMessage(options, 'WARN');
 	}
@@ -123,7 +145,7 @@ class Logger {
 				const { size } = await fs.promises.stat(filePath);
 
 				fileSizeInBytes = size;
-			} 
+			}
 			catch {
 				// if filePath doesn't exist, log file can be created from filePath
 				return filePath;
@@ -132,7 +154,7 @@ class Logger {
 			if (fileSizeInBytes >= this.maxLogFileSizeInBytes) {
 				const files = await fs.promises.readdir(this.dir)
 
-				const index = files.filter(file => file.startsWith(filename)).length;				
+				const index = files.filter(file => file.startsWith(filename)).length;
 				const paddedIndex = zeroPad(index, 2);
 
 				let newFilename = `${filename}.txt${paddedIndex}`;

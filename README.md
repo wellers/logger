@@ -39,13 +39,25 @@ boot();
 * maxLogFileSizeInBytes - `number` - Optional maximum file size in bytes a log file can be. Once this value has been exceeded, a new log file will be created with the former file being retained and renamed.
 
 **`logger.error(options)`** - For logging caught errors.
-
-**`logger.info(options)`** - Useful for logging process information.
-
-**`logger.warning(options)`** - Useful for recording non-critical exceptions.
-
 * options - `object` - Log options.
     * processName - `string` - Optional name to prefix the log filenames with.
     * category - `string` - Optional category to apply to your logged message.
     * message - `string` - Optional message to record in the log.
     * error - `Error` - Optional Error.
+* Returns: `Promise<void>`
+
+**`logger.info(options)`** - Useful for logging process information.
+* options - `object` - Log options.
+    * processName - `string` - Optional name to prefix the log filenames with.
+    * category - `string` - Optional category to apply to your logged message.
+    * message - `string` - Optional message to record in the log.
+    * error - `Error` - Optional Error.
+* Returns: `Promise<void>`
+
+**`logger.warning(options)`** - Useful for recording non-critical exceptions.
+* options - `object` - Log options.
+    * processName - `string` - Optional name to prefix the log filenames with.
+    * category - `string` - Optional category to apply to your logged message.
+    * message - `string` - Optional message to record in the log.
+    * error - `Error` - Optional Error.
+* Returns: `Promise<void>`
